@@ -71,8 +71,13 @@
 	$swapFree = array_search('SwapFree', $matches[1]);
 	$swapFree = $matches[2][$swapFree];
 	$swapUsed = $swapTotal - $swapFree;
-	$values['SwapPercent'] = round($swapUsed / $swapTotal * 100) . '% used';
-	$values['SwapPercentRaw'] = round($swapUsed / $swapTotal * 100);
+	if($swapTotal != 0) {
+		$values['SwapPercent'] = round($swapUsed / $swapTotal * 100) . '% used';
+		$values['SwapPercentRaw'] = round($swapUsed / $swapTotal * 100);
+	} else {
+		$values['SwapPercent'] = '0% used';
+		$values['SwapPercentRaw'] = 0;
+	}
 	$values['SwapUsed'] = round($swapUsed / 1024, 0) . ' MiB';
 	$values['SwapTotal'] = round($swapTotal / 1024, 0) . ' MiB';
 	

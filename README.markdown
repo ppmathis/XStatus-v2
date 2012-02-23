@@ -4,7 +4,7 @@
 #### What is XStatus?
 XStatus is a nice, small and detailed server status page. It shows things like CPU load,
 memory usage, disk usage and so on in small and handy graphs. There is no setup needed -
-you must only upload the files and configure the 
+you must only upload the files and configure the 2 options.
 
 #### System requirements
 Any webserver with PHP support. This little handy script doesn't need any root access
