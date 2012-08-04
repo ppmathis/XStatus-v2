@@ -12,7 +12,6 @@ If anything like that occurs, please open an issue report. Basic configuration i
 the index.php file at the top. 
 
 #### Upcoming features
-- Live Update
 - Real graphs
 - Multi server support
 

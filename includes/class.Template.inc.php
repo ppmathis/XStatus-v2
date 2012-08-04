@@ -37,7 +37,9 @@
 		public function __construct($templateFile) {
 			/* Check if file exists and is readable */
 			if(!file_exists($templateFile) || !is_readable($templateFile)) {
-				throw new Exception('Can not load template file ' . $templateFile);
+				$error = Error::getInstance();
+				$error->addError('new Template("' . $templateFile . '")', 'Can not load template file "' . $templateFile . '"');
+				$error->showXML();
 			}
 			
 			/* Read the complete file into the buffer */
@@ -172,6 +174,25 @@
 		}
 		
 		/**
+		 * [Parser] This tag
+		 * @param 	array	$input	Callback input
+		 * @return	string	Callback output
+		 */
+		private function _parseThis($input) {
+			/* Process input */
+			$scopeName = $input[1];
+			
+			/* Set scope of "this" variable */
+			if(array_key_exists('scopes', $this->_data)) {
+				if(array_key_exists($scopeName, $this->_data['scopes'])) {
+					$this->_data['this'] = &$this->_data['scopes'][$scopeName];
+				}
+			}
+			
+			return '';
+		}
+		
+		/**
 		 * Parse the template file
 		 * @param 	string	$text	Text to parse
 		 * @return void
@@ -179,6 +200,7 @@
 		private function _parse($text) {
 			/* Parse the template */
 			$text = preg_replace_callback('~\{ignore\}(.*?)\{/ignore\}~U', array(&$this, '_parseIgnore'), $text);
+			$text = preg_replace_callback('~\{this scope=\'(.*?)\'\}~U', array(&$this, '_parseThis'), $text);
 			$text = preg_replace_callback('~\{loop in=\'([A-Za-z0-9_\.]*)\' key=\'([A-Za-z0-9_]*)\' out=\'([A-Za-z0-9_]*)\' alt=([01])}(.*)\{/loop\}~sU', array(&$this, '_parseLoop'), $text);
 			$text = preg_replace_callback('~\{([A-Za-z0-9_\.]{1,})\}~U', array(&$this, '_parseVariable'), $text);
 			$text = preg_replace_callback('~\{include file=\'(.*?)\'\}~U', array(&$this, '_parseInclude'), $text);
@@ -211,12 +233,8 @@
 			$result = $this->_parse($this->_buffer);
 			$result = $this->_parse($result);
 			
-			/* Compress HTML output */
-			$compress = array(
-					'/ +/' => ' ',
-					'/<!–\{(.*?)\}–>|<!–(.*?)–>|[\t\r\n]|<!–|–>|\/\/ <!–|\/\/ –>|<!\[CDATA\[|\/\/ \]\]>|\]\]>|\/\/\]\]>|\/\/<!\[CDATA\[/' => ''
-			);
-			$result = preg_replace(array_keys($compress), array_values($compress), $result);
+			/* Compress HTML output (thanks to Alan Moore) */
+			$result = preg_replace('#(?ix)(?>[^\S ]\s*|\s{2,})(?=(?:(?:[^<]++|<(?!/?(?:textarea|pre|script)\b))*+)(?:<(?>textarea|pre|script)\b|\z))#', '', $result);
 			
 			return $result;
 		}

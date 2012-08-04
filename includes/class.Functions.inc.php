@@ -204,9 +204,9 @@
 		public static function convertBytes($bytes, $precision) {
 			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 			if($bytes === 0) return '0 ' . $units[0];
-			return @round(
+			return number_format(@round(
 				$bytes / pow(1000, ($i = floor(log($bytes, 1000)))), $precision
-			). ' ' . $units[$i];
+			), $precision) . ' ' . $units[$i];
 		}
 		
 		/**
@@ -247,22 +247,22 @@
 							$data = array($data2[1], $data2[4], $data2[6], $data2[8], $data2[10], $data1[1]);
 							if(count($data) == 6) {
 								$data[5] = trim($data[5]);
-								$device = new DiskDevice();
-								$device->name = trim($data[0]);
+								$device = array();
+								$device['name'] = trim($data[0]);
 								if($data[2] < 0) {
-									$device->total = $data[3] * 1024;
-									$device->used = $data[3] * 1024;
+									$device['total'] = $data[3] * 1024;
+									$device['used'] = $data[3] * 1024;
 								} else {
-									$device->total  = $data[1] * 1024;
-									$device->used = $data[2] * 1024;
-									$device->free = $data[3] * 1024;
+									$device['total']  = $data[1] * 1024;
+									$device['used'] = $data[2] * 1024;
+									$device['free'] = $data[3] * 1024;
 								}
 								
 								if(isset($mountData[$data[5]])) {
-									$device->type = $mountData[$data[5]]['fstype'];
+									$device['type'] = $mountData[$data[5]]['fstype'];
 									if(XSTATUS_SHOW_MOUNT_OPTION) {
 										if(XSTATUS_SHOW_MOUNT_CREDENTIALS) {
-											$device->options = $mountData[$data[5]]['options'];
+											$device['options'] = $mountData[$data[5]]['options'];
 										} else {
 											$tmp = $mountData[$data[5]]['options'];
 											$tmp = preg_replace('~(^guest,)|(^guest$)|(,guest$)~i', '', $tmp);
@@ -271,7 +271,7 @@
 											$tmp = preg_replace('~,user=[^,]*,~i', '', $tmp);
 											$tmp = preg_replace('~(^password=[^,]*,)|(^password=[^,]*$)|(,password=[^,]*$)~i', '', $tmp);
 											$tmp = preg_replace('~,password=[^,]*,~i', '', $tmp);
-											$device->options = $tmp;
+											$device['options'] = $tmp;
 											unset($tmp);
 										}
 									}

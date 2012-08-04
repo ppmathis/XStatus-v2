@@ -19,6 +19,12 @@
 		private static $_instance = null;
 		
 		/**
+		 * Error list
+		 * @var array
+		 */
+		private $_errorList = array();
+		
+		/**
 		 * Returns a singleton instance
 		 * @return Error Singleton instance
 		 */
@@ -31,13 +37,43 @@
 		
 		/**
 		 * Adds an error
-		 * @param string	$command		The command which failed
-		 * @param string	$description	Error description
-		 * @return void
+		 * @param	string	$command		The command which failed
+		 * @param	string	$description	Error description
+		 * @return	void
 		 */
 		public function addError($command, $description) {
-			echo '';
+			$this->_errorList[] = array(
+					'command' => $command,
+					'message' => $description	
+			);
 		}
 		
+		/**
+		 * Shows all errors as an XML
+		 * @return void
+		 */
+		public function showXML() {
+			/* Create DOM document */
+			$dom = new DOMDocument('1.0', 'UTF-8');
+			$root = $dom->createElement('XStatus');
+			$dom->appendChild($root);
+			
+			/* Generate XML */
+			$xml = new SimpleXMLExtended(simplexml_import_dom($dom), 'UTF-8');
+			$generation = $xml->addChild('Generation');
+			$generation->addAttribute('version', XSTATUS_VERSION);
+			$generation->addAttribute('timestamp', time());
+			$errors = $xml->addChild('Errors');
+			foreach($this->_errorList as $error) {
+				$errorNode = $errors->addCData('Error', $error['message']);
+				$errorNode->addAttribute('Function', $error['command']);
+			}
+			
+			/* Return XML */
+			header('Cache-Control: no-cache, must-revalidate');
+			header('Content-Type: text/xml');
+			echo $xml->getSimpleXMLElement()->asXML();
+			exit();
+		}
 	}
 ?>
