@@ -3,8 +3,8 @@
 * * *
 #### What is XStatus?
 XStatus is a nice, small and detailed server status page. It shows things like CPU load,
-memory usage, disk usage and so on in small and handy graphs. There is no setup needed -
-you must only upload the files and configure the 2 options.
+memory usage, disk usage and so on in small and handy graphs. You can find the installation
+instructions in the [XStatus wiki](https://github.com/NeoXiD/XStatus/wiki).
 
 #### Version 2 (public-testing)
 Version 2 is an experimental public beta. It may be vulnerable, contain bugs or other bad things. 
