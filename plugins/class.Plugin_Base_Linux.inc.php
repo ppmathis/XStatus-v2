@@ -209,9 +209,9 @@
 			}
 			if(XSTATUS_UPDATE_CHECK == true) {
 				$actualVersion = trim(file_get_contents('http://www.snapserv.net/update/xstatus.txt'));
-				if($actualVersion != null && $actualVersion != XSTATUS_VERSION) {
+				if($actualVersion != XSTATUS_VERSION) {
 					$updateText = '<a href="http://www.github.com/NeoXiD/XStatus" target="_blank" style="color: #77AA11;">';
-					$updateText .= 'New version available</p>';
+					$updateText .= 'New version available';
 					$updateText .= '</a>';
 					$this->_data['xstatus_version'] = XSTATUS_VERSION . ' - ' . $updateText;
 				} else {
