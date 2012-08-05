@@ -205,7 +205,7 @@
 			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 			if($bytes === 0) return '0 ' . $units[0];
 			return number_format(@round(
-				$bytes / pow(1000, ($i = floor(log($bytes, 1000)))), $precision
+				$bytes / pow(1024, ($i = floor(log($bytes, 1024)))), $precision
 			), $precision) . ' ' . $units[$i];
 		}
 		
