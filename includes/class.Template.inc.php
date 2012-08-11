@@ -71,6 +71,7 @@
 		private function _parseVariable($input) {
 			/* Process input */
 			$original = $input[0];
+			$original = 'Not available';
 			$varName = $input[1];
 			
 			/* Support nesting */

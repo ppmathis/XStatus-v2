@@ -136,6 +136,11 @@
 					}
 				}
 			}
+			
+			/* Add default icon if necessary */
+			if(!isset($this->_data['distro']['icon'])) {
+				$this->_data['distro']['icon'] = 'Unknown.png';
+			}
 		}
 		
 		/**
@@ -202,16 +207,19 @@
 				
 			/* Get MySQL client version */
 			if(function_exists('mysql_get_client_info')) {
-				preg_match('~mysqlnd [1-9].[0-9].[1-9][0-9]~', mysql_get_client_info(), $tmp);
-				$this->_data['mysql_version'] = $tmp[0];
+				if(preg_match('~mysqlnd [1-9].[0-9].[1-9][0-9]~', mysql_get_client_info(), $tmp)) {
+					$this->_data['mysql_version'] = $tmp[0];
+				} else {
+					$this->_data['mysql_version'] = 'N/A';
+				}
 			} else {
 				$this->_data['mysql_version'] = 'N/A';
 			}
 			if(XSTATUS_UPDATE_CHECK == true) {
 				$actualVersion = trim(file_get_contents('http://www.snapserv.net/update/xstatus.txt'));
-				if($actualVersion != XSTATUS_VERSION) {
+				if($actualVersion != null && $actualVersion != XSTATUS_VERSION) {
 					$updateText = '<a href="http://www.github.com/NeoXiD/XStatus" target="_blank" style="color: #77AA11;">';
-					$updateText .= 'New version available';
+					$updateText .= 'New version available</p>';
 					$updateText .= '</a>';
 					$this->_data['xstatus_version'] = XSTATUS_VERSION . ' - ' . $updateText;
 				} else {
@@ -326,6 +334,35 @@
 		 * @return void
 		 */
 		public function collectData() {
+			/* Create dummy data */
+			$this->_data['memory'] = array(
+					'free' => 'Not available',
+					'used' => 'Not available',
+					'total' => 'Not available',
+					'kernel' => 'Not available',
+					'cache' => 'Not available',
+					'buffer' => 'Not available',
+					'percent_total' => '0.00',
+					'percent_kernel' => '0.00',
+					'percent_cache' => '0.00',
+					'percent_buffer' => '0.00'
+			);
+				
+			$this->_data['swap'] = array(
+					'free' => 'Not available',
+					'used' => 'Not available',
+					'total' => 'Not available',
+					'percent' => '0.00',
+					'drives' => array(
+							array(
+									'mount' => 'Not available',
+									'used' => 'Not available',
+									'percent' => '0.00'
+							)
+					)
+			);
+			
+			/* Collect real data */
 			$this->_hostname();
 			$this->_ip();
 			$this->_kernel();

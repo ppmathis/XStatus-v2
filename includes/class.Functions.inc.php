@@ -27,7 +27,7 @@
 			$error = Error::getInstance();
 			
 			/* Try to open file */
-			if(file_exists($filename)) {
+			if(@file_exists($filename)) {
 				if($handle = fopen($filename, 'r')) {
 					/* Fetch line by line */
 					while(!feof($handle)) {
@@ -47,13 +47,15 @@
 					return true;
 				} else {
 					if($errorRep) {
-						$error->addError('fopen(' . $filename . ')', 'Can not read file.');
+						$error->addError('fopen(' . $filename . ')', 'Can not read the file.');
+						$error->showXML();
 					}
 					return false;
 				}
 			} else {
 				if($errorRep) {
-					$error->addError('file_exists(' . $filename . ')', 'The file does not exist.');
+					$error->addError('file_exists(' . $filename . ')', 'The file does not exist or is affected by open_basedir restriction.');
+					$error->showXML();
 				}
 			}
 		}
@@ -86,7 +88,7 @@
 			/* Scan paths */
 			foreach($arrPath as $path) {
 				/* Avoid open_basedir errors */
-				if((isset($open_basedir) && !in_array($path, $open_basedir)) || !is_dir($path)) {
+				if((isset($open_basedir) && !in_array($path, $open_basedir) && !in_array($path . '/', $open_basedir)) || !is_dir($path)) {
 					continue;
 				}
 				
