@@ -253,6 +253,7 @@
 				}
 		
 				/* Calculate kernel and total memory usage */
+				if(!isset($rawBuffer)) $rawBuffer = 0;
 				$rawUsed = $rawTotal - $rawFree;
 				$rawKernel = $rawUsed - $rawCache - $rawBuffer;
 				

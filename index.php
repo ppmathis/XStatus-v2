@@ -19,7 +19,7 @@
 	
 	/* Configuration */
 	define('XSTATUS_ROOT', dirname(__FILE__));
-	define('XSTATUS_VERSION', 'v2.1.2 beta (public-testing)');
+	define('XSTATUS_VERSION', 'v2.1.3 beta (public-testing)');
 	define('XSTATUS_DEBUG', false);
 	define('XSTATUS_LANGUAGE', 'en');
 	define('XSTATUS_USE_VHOST', false);
