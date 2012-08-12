@@ -72,7 +72,7 @@
 				$program .= '.exe';
 				$arrPath = preg_split('~;~', getenv("Path"), -1, PREG_SPLIT_NO_EMPTY);
 			} else {
-				$arrPath = preg_split('~;~', getenv("PATH"), -1, PREG_SPLIT_NO_EMPTY);
+				$arrPath = preg_split('~:~', getenv("PATH"), -1, PREG_SPLIT_NO_EMPTY);
 			}
 			
 			/* Add some default paths */
