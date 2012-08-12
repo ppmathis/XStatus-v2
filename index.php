@@ -26,7 +26,7 @@
 	define('XSTATUS_SHOW_MOUNT_OPTION', true);
 	define('XSTATUS_SHOW_MOUNT_CREDENTIALS', false);
 	define('XSTATUS_REFRESH_RATE', 5000);
-	define('XSTATUS_UPDATE_CHECK', false);
+	define('XSTATUS_UPDATE_CHECK', true);
 	
 	$pluginList = array(
 			'Base',	
